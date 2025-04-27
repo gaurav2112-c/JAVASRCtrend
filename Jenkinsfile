@@ -52,11 +52,17 @@ pipeline {
                                               // Checks if the quality gate status is not OK
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                                               // Aborts the pipeline if the quality gate fails
-                        }
+                                               }
                     }
-               }                             // 13  // Ends the script block for the Quality Gate stage
-          }                                 // 12  // Ends the steps block for 'Quality Gate' stage
-     }                                     // 11  // Ends the 'Quality Gate' stage
+                }                             // 13  // Ends the script block for the Quality Gate stage
+            }                                 // 12  // Ends the steps block for 'Quality Gate' stage
+        }                                     // 11  // Ends the 'Quality Gate' stage
 }
-
+}
+}
+                   
+                                             // 13  // Ends the script block for the Quality Gate stage
+                                            // 12  // Ends the steps block for 'Quality Gate' stage
+           
+                              // 11  // Ends the 'Quality Gate' stage
 
