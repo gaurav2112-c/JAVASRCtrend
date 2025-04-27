@@ -1,37 +1,33 @@
-pipeline {                                    // 1  // Defines the start of the Jenkins pipeline block
+pipeline {
+    agent any
 
-    agent any                                 // Specifies the pipeline can run on any available agent
+    tools {
+        jdk 'JAVA_HOME'   // <-- This is the name you set in Jenkins -> Global Tool Configuration
+    }
 
-    environment {                             // 2  // Defines environment variables for the pipeline
-        PATH = "/opt/maven/bin:$PATH"         // Adds Maven's path to the system's PATH variable
-    }                                         // 2  // Ends the environment block
+    environment {
+        PATH = "/opt/maven/bin:$PATH"
+    }
 
-    stages {                                  // 3  // Defines the stages block where multiple stages are declared
-        
-        stage("build") {                      // 4  // Creates a stage named 'build'
-            steps {                           // 5  // Defines the steps that will be executed in this stage
-                echo "----------- build started ----------"  
-                                              // Logs a message indicating the start of the build
-                sh 'mvn clean deploy'  
-                                              // Runs Maven clean and deploy commands, skipping tests
-                echo "----------- build completed ----------"  
-                                              // Logs a message indicating the build completion
-            }                                 // 5  // Ends the steps block for 'build' stage
-        }                                     // 4  // Ends the 'build' stage
+    stages {
+        stage("build") {
+            steps {
+                echo "----------- build started ----------"
+                sh 'java -version'       // (optional: this will print Java 21 version during build)
+                sh 'mvn clean deploy'
+                echo "----------- build completed ----------"
+            }
+        }
 
-        stage('SonarQube analysis') {         // 8  // Creates a stage named 'SonarQube analysis'
-           environment {                     // 9  // Defines environment variables specific to this stage
-                scannerHome = tool 'gaurav-sonar-scanner'  
-                                              // Sets the SonarQube scanner tool
-            }                                 // 9  // Ends the environment block for this stage
-
-            steps {                           // 10  // Defines the steps that will be executed in this stage
+        stage('SonarQube analysis') {
+            environment {
+                scannerHome = tool 'gaurav-sonar-scanner'
+            }
+            steps {
                 withSonarQubeEnv('JAVA-sonarqube-server') {
-                                              // Executes the SonarQube analysis within the SonarQube environment
-                    sh "${scannerHome}/bin/sonar-scanner"  
-                                              // Runs the SonarQube scanner tool
-                }                             // Ends the withSonarQubeEnv block
-            }                                 // 10  // Ends the steps block for 'SonarQube analysis' stage
-        }                                     // 8  // Ends the 'SonarQube analysis' stage
-   }
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+    }
 }
